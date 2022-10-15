@@ -6,8 +6,12 @@ import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import {FormGroup} from '@mui/material';
 import '../App.css';
+import ReactPhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
-const Login = () => {
+const Signup = () => {
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -18,12 +22,33 @@ const Login = () => {
     <Container maxWidth="sm">
       <FormGroup row={true} className="form-group">
         <FormControl variant="standard">
-          <InputLabel htmlFor="component-simple">Email:</InputLabel>
-          <Input id="component-simple" value={email} onChange={(e)=>{
-            setEmail(e.target.value);
-          }} />
+          <InputLabel htmlFor="component-simple">Name:</InputLabel>
+          <Input id="component-simple"
+            value={name}
+            onChange={(e)=>{
+              setName(e.target.value);
+            }} />
         </FormControl>
       </FormGroup>
+      <FormGroup row={true} className="form-group">
+        <FormControl variant="standard">
+          <InputLabel htmlFor="component-simple">Email:</InputLabel>
+          <Input id="component-simple"
+            value={email}
+            onChange={(e)=>{
+              setEmail(e.target.value);
+            }} />
+        </FormControl>
+      </FormGroup>
+      <div>
+        <ReactPhoneInput
+          defaultCountry={'us'}
+          value={phone}
+          onChange={(e)=>{
+            setPhone(e.target.value);
+          }}
+        />
+      </div>
       <FormGroup row={true} className="form-group">
         <FormControl variant="standard">
           <InputLabel htmlFor="component-helper">Password: </InputLabel>
@@ -41,9 +66,9 @@ const Login = () => {
       <Button variant="contained"
         onClick={()=>{
           handleSubmit(email, password);
-        }}>Login</Button>
+        }}>Sign Up</Button>
     </Container>
   );
 };
 
-export default Login;
+export default Signup;
