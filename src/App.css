@@ -36,3 +36,6 @@
     transform: rotate(360deg);
   }
 }
+.not-found{
+  background: url('../public/img/404.gif');
+}
