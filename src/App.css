@@ -36,6 +36,12 @@
     transform: rotate(360deg);
   }
 }
+.form-group{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+}
 .not-found{
   background: url('../public/img/404.gif');
 }
