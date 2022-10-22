@@ -42,3 +42,6 @@
   align-items: center;
   margin-bottom: 40px;
 }
+.not-found{
+  background: url('../public/img/404.gif');
+}
