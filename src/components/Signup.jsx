@@ -1,4 +1,5 @@
 import {React, useState} from 'react';
+import {Link} from 'react-router-dom';
 import Container from '@mui/material/Container';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -19,7 +20,7 @@ const Signup = () => {
     alert('Email: ' + email + ' Password: ' + password);
   };
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" className='form-container'>
       <FormGroup row={true} className="form-group">
         <FormControl variant="standard">
           <InputLabel htmlFor="component-simple">Name:</InputLabel>
@@ -40,15 +41,14 @@ const Signup = () => {
             }} />
         </FormControl>
       </FormGroup>
-      <div>
-        <ReactPhoneInput
-          defaultCountry={'us'}
-          value={phone}
-          onChange={(e)=>{
-            setPhone(e.target.value);
-          }}
-        />
-      </div>
+      <ReactPhoneInput
+        defaultCountry={'us'}
+        value={phone}
+        onChange={(e)=>{
+          setPhone(e.target.value);
+        }}
+      />
+
       <FormGroup row={true} className="form-group">
         <FormControl variant="standard">
           <InputLabel htmlFor="component-helper">Password: </InputLabel>
@@ -67,6 +67,7 @@ const Signup = () => {
         onClick={()=>{
           handleSubmit(email, password);
         }}>Sign Up</Button>
+      <h5>Already have an account? <Link to="/">Login</Link></h5>
     </Container>
   );
 };
