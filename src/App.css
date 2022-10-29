@@ -42,3 +42,14 @@
   align-items: center;
   margin-bottom: 40px;
 }
+/* position form-container to the center of the page*/
+/* make form-container responsive*/
+.form-container{
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
+}
