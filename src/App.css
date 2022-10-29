@@ -42,8 +42,6 @@
   align-items: center;
   margin-bottom: 40px;
 }
-/* position form-container to the center of the page*/
-/* make form-container responsive*/
 .form-container{
   width: 100%;
   max-width: 500px;

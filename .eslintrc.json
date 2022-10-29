@@ -17,6 +17,11 @@
     "plugins": [
         "react"
     ],
+    "ignorePatterns":[
+        "App.test.js",
+        "reportWebVitals.js",
+        "setupTest.js"
+    ],
     "rules": {
         "require-jsdoc":0,
         "linebreak-style":0,
