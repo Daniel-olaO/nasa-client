@@ -20,6 +20,7 @@ const Login = () => {
     <>
       <Navbar/>
       <Container maxWidth="sm">
+        <h2>Login</h2>
         <FormGroup row={true} className="form-group">
           <FormControl variant="standard">
             <InputLabel htmlFor="component-simple">Email:</InputLabel>
