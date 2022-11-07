@@ -1,4 +1,5 @@
 import {React, useState} from 'react';
+import {Link} from 'react-router-dom';
 import Container from '@mui/material/Container';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -23,6 +24,7 @@ const Signup = () => {
     <>
       <Navbar/>
       <Container maxWidth="sm">
+        <h2>Sign Up</h2>
         <FormGroup row={true} className="form-group">
           <FormControl variant="standard">
             <InputLabel htmlFor="component-simple">Name:</InputLabel>
@@ -71,6 +73,7 @@ const Signup = () => {
             handleSubmit(email, password);
           }}>Sign Up</Button>
       </Container>
+      <h5>Already have an account? <Link to="/">Login</Link></h5>
     </>
   );
 };
