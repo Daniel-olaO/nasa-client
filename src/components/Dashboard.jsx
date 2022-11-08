@@ -26,11 +26,17 @@ const Dashboard = ({setIsAuthenticated}) => {
   const [isSubscribed, setIsSubscribed] = useState(true);
 
   const logOut = async () => {
+    const response = await logOut();
     const cookies = new Cookies();
     localStorage.removeItem('data');
     cookies.remove('token');
     setIsAuthenticated(false);
   };
+  const handleClick = async () => {
+    const response = await toggleSubscription();
+    setIsSubscribed(response.isSubscribed);
+  };
+
   useEffect(() => {
     setIsSubscribed(localStorage.getItem('data').isSubscribed);
   }, []);
@@ -49,13 +55,13 @@ const Dashboard = ({setIsAuthenticated}) => {
         {isSubscribed ?
             <button className="btn-danger"
               onClick={()=>{
-                setIsSubscribed(!isSubscribed);
+                handleClick();
               }}>
                 Unsubscribe
             </button> :
             <button className="btn-success"
               onClick={()=>{
-                setIsSubscribed(!isSubscribed);
+                handleClick();
               }}>
                 Subscribe
             </button>}
