@@ -1,5 +1,5 @@
 import {React, useState} from 'react';
-import {Link} from 'react-router-dom';
+import {useNavigate, Link} from 'react-router-dom';
 import Container from '@mui/material/Container';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -8,17 +8,44 @@ import Button from '@mui/material/Button';
 import {FormGroup} from '@mui/material';
 import '../App.css';
 import Navbar from './Navbar';
-import ReactPhoneInput from 'react-phone-input-2';
-import 'react-phone-input-2/lib/style.css';
+
+
+function signUp(user) {
+  const baseUrl = process.env.API_BASE_URL || 'http://localhost:8000';
+  return fetch(`${baseUrl}/api/register`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+    body: JSON.stringify(user),
+  })
+      .then((data) => data.json());
+}
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
+  const [showMessage, setShowMessage] = useState(false);
 
-  const handleSubmit = () => {
-    alert('Email: ' + email + ' Password: ' + password);
+  const handleSubmit = async () => {
+    const response = await signUp({name, email, phone, password});
+    if (response.ok) {
+      navigate('/');
+    } else {
+      setMessage('User registration failed');
+      setShowMessage(true);
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 2000);
+    }
+    setName('');
+    setEmail('');
+    setPassword('');
+    setPhone('');
   };
   return (
     <>
@@ -45,15 +72,21 @@ const Signup = () => {
               }} />
           </FormControl>
         </FormGroup>
-        <div>
-          <ReactPhoneInput
-            defaultCountry={'us'}
-            value={phone}
-            onChange={(e)=>{
-              setPhone(e.target.value);
-            }}
-          />
-        </div>
+        <FormGroup row={true} className="form-group">
+          <FormControl variant="standard">
+            <InputLabel htmlFor="component-helper">Phone: </InputLabel>
+            <Input
+              id="component-helper"
+              type="text"
+              placeholder="+123456789"
+              value={phone}
+              onChange={(e)=>{
+                setPhone(e.target.value);
+              }}
+              aria-describedby="component-helper-text"
+            />
+          </FormControl>
+        </FormGroup>
         <FormGroup row={true} className="form-group">
           <FormControl variant="standard">
             <InputLabel htmlFor="component-helper">Password: </InputLabel>
