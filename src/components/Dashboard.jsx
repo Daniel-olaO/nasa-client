@@ -1,5 +1,6 @@
 import {React, useState, useEffect} from 'react';
-import Container from '@mui/material/Container';
+import {Container, Alert} from '@mui/material';
+import Navbar from './Navbar';
 import '../App.css';
 
 function logOut() {
@@ -42,16 +43,18 @@ const Dashboard = ({setIsAuthenticated}) => {
   }, []);
   return (
     <>
+      <Navbar/>
       <Container maxWidth="sm">
-        {/* make info alert box */}
-        <div className="info">
-          {isSubscribed ? (
-                  <p>Your subscription is active</p>
+        {isSubscribed ? (
+                  <Alert severity="info">
+                    You are subscribed to our Nasa APOD.
+                  </Alert>
                 ) : (
-                      <p>Your subscription is inactive</p>
+                  <Alert severity="info">
+                    You are not subscribed to our Nasa APOD.
+                  </Alert>
                     )
-          }
-        </div>
+        }
         {isSubscribed ?
             <button className="btn-danger"
               onClick={()=>{
