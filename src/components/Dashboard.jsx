@@ -1,10 +1,46 @@
-import {React, useState} from 'react';
+import {React, useState, useEffect} from 'react';
 import {Container, Alert} from '@mui/material';
 import Navbar from './Navbar';
 import '../App.css';
 
-const Dashboard = () => {
+function logOut() {
+  const baseUrl = process.env.API_BASE_URL ||'http://localhost:8000';
+  return fetch(baseUrl + '/api/logout', {
+    method: 'POST',
+  })
+      .then((response) => {
+        return response.json();
+      });
+}
+function toggleSubscription() {
+  const id = localStorage.getItem('data').id;
+  const baseUrl = process.env.API_BASE_URL ||'http://localhost:8000';
+  return fetch(baseUrl + '/api/toggle-subscription/' + id, {
+    method: 'POST',
+  })
+      .then((response) => {
+        return response.json();
+      });
+}
+
+const Dashboard = ({setIsAuthenticated}) => {
   const [isSubscribed, setIsSubscribed] = useState(true);
+
+  const logOut = async () => {
+    const response = await logOut();
+    const cookies = new Cookies();
+    localStorage.removeItem('data');
+    cookies.remove('token');
+    setIsAuthenticated(false);
+  };
+  const handleClick = async () => {
+    const response = await toggleSubscription();
+    setIsSubscribed(response.isSubscribed);
+  };
+
+  useEffect(() => {
+    setIsSubscribed(localStorage.getItem('data').isSubscribed);
+  }, []);
   return (
     <>
       <Navbar/>
@@ -22,13 +58,13 @@ const Dashboard = () => {
         {isSubscribed ?
             <button className="btn-danger"
               onClick={()=>{
-                setIsSubscribed(!isSubscribed);
+                handleClick();
               }}>
                 Unsubscribe
             </button> :
             <button className="btn-success"
               onClick={()=>{
-                setIsSubscribed(!isSubscribed);
+                handleClick();
               }}>
                 Subscribe
             </button>}
