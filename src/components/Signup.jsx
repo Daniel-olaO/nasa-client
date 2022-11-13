@@ -79,6 +79,7 @@ const Signup = () => {
               id="component-helper"
               type="text"
               placeholder="+123456789"
+              pattern="^\+[0-9]{9,15}$"
               value={phone}
               onChange={(e)=>{
                 setPhone(e.target.value);

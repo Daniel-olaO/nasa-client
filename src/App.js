@@ -22,11 +22,13 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={
+          <Login setIsAuthenticated={setIsAuthenticated}/>
+        } />
         <Route path="/signup" element={<Signup />} />
         <Route path="/home" element={
           <ProtectedRoute isAuth={isAuthenticated}>
-            <Dashboard />
+            <Dashboard setIsAuthenticated={setIsAuthenticated}/>
           </ProtectedRoute>
         } />
         <Route path="*" element={<NotFound />} />
