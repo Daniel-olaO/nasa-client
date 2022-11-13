@@ -5,7 +5,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
-import {FormGroup} from '@mui/material';
+import {FormGroup, Alert} from '@mui/material';
 import '../App.css';
 import Navbar from './Navbar';
 
@@ -36,7 +36,7 @@ const Signup = () => {
     if (response.ok) {
       navigate('/');
     } else {
-      setMessage('User registration failed');
+      setMessage(response.detail);
       setShowMessage(true);
       setTimeout(() => {
         setShowMessage(false);
@@ -51,6 +51,7 @@ const Signup = () => {
     <>
       <Navbar/>
       <Container maxWidth="sm">
+        {showMessage && <Alert severity="error">{message}</Alert>}
         <h2>Sign Up</h2>
         <FormGroup row={true} className="form-group">
           <FormControl variant="standard">
