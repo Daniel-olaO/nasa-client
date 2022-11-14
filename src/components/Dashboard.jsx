@@ -13,9 +13,11 @@ function logOut() {
       });
 }
 function toggleSubscription() {
-  const id = localStorage.getItem('data').id;
+  const data = localStorage.getItem('data');
+  const parsedData = JSON.parse(data);
+  const id = parsedData.id;
   const baseUrl = process.env.API_BASE_URL ||'http://localhost:8000';
-  return fetch(baseUrl + '/api/toggle-subscription/' + id, {
+  return fetch(`${baseUrl}/api/toggle-subscription/${id}/`, {
     method: 'POST',
   })
       .then((response) => {
@@ -28,6 +30,7 @@ const Dashboard = ({setIsAuthenticated}) => {
 
   const logOut = async () => {
     const response = await logOut();
+    console.log(response);
     const cookies = new Cookies();
     localStorage.removeItem('data');
     cookies.remove('token');
@@ -35,15 +38,24 @@ const Dashboard = ({setIsAuthenticated}) => {
   };
   const handleClick = async () => {
     const response = await toggleSubscription();
-    setIsSubscribed(response.isSubscribed);
+    const dataSet = {
+      'id': response.id,
+      'name': response.name,
+      'isSubscribed': response.isSubscribed,
+    };
+    localStorage.removeItem('data');
+    localStorage.setItem('data', JSON.stringify(dataSet));
+    setIsSubscribed(dataSet.isSubscribed);
   };
 
   useEffect(() => {
-    setIsSubscribed(localStorage.getItem('data').isSubscribed);
-  }, []);
+    const data = localStorage.getItem('data');
+    const parsedData = JSON.parse(data);
+    setIsSubscribed(parsedData.isSubscribed);
+  }, [isSubscribed]);
   return (
     <>
-      <Navbar/>
+      <Navbar />
       <Container maxWidth="sm">
         {isSubscribed ? (
                   <Alert severity="info">

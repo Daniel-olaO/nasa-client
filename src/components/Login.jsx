@@ -23,9 +23,9 @@ function login(user) {
       .then((data) => data.json());
 }
 
-const Login = ({setIsLoggedIn}) => {
+const Login = ({setIsAuthenticated}) => {
   const navigate = useNavigate();
-  const cookie = new Cookies();
+  const cookies = new Cookies();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -34,18 +34,17 @@ const Login = ({setIsLoggedIn}) => {
 
   const handleSubmit = async () => {
     const response = await login({email, password});
-    console.log(response);
-    if (response.token) {
+    if (response.jwt) {
       const duration = new Date();
       duration.setTime(duration.getTime() + (1 * 60 * 60 * 1000));
-      cookies.set('token', response.token, {path: '/', expires: duration});
-      dataSet = {
+      cookies.set('token', response.jwt, {path: '/', expires: duration});
+      const dataSet = {
         'id': response.user.id,
         'name': response.user.name,
         'isSubscribed': response.user.isSubscribed,
       };
       localStorage.setItem('data', JSON.stringify(dataSet));
-      setIsLoggedIn(true);
+      setIsAuthenticated(true);
       navigate('/home');
     } else {
       console.log(response);
