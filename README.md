@@ -32,9 +32,11 @@ use npm start to start the app
 npm start
 ```
 
+users must sign up with a name, a phone number, a email address and a password. The phone number must have the country-code of the country in which the phone number orginated from: Canada -> +16574832074. The email address must be a valid email address. The user will receive a welcome text message. The user will also receive a text message every day with the NASA Astronomy Picture of the Day.
+
 # API
 
-This uses uses the Nasa-APOD API to get the daily picture and description.
+This uses the Nasa-APOD API to get the daily picture and description.
 API Repository: https://github.com/Daniel-olaO/nasa-APOD
 
 # Tools
