@@ -1,4 +1,5 @@
 import React from 'react';
+import {BsFillCaretDownFill} from 'react-icons/bs';
 import '../App.css';
 
 const Navbar = ({userName, logOut}) => {
@@ -8,7 +9,7 @@ const Navbar = ({userName, logOut}) => {
       {userName ? (
             <div className="dropdown">
               <button className="dropbtn">{userName}
-                <i className="fa fa-caret-down"></i>
+                <BsFillCaretDownFill/>
               </button>
               <div className="dropdown-content">
                 <a onClick={logOut}>Log Out</a>
