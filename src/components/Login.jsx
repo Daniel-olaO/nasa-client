@@ -5,7 +5,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
-import {FormGroup} from '@mui/material';
+import {FormGroup, Alert} from '@mui/material';
 import Cookies from 'universal-cookie';
 import Navbar from './Navbar';
 import '../App.css';
@@ -47,7 +47,6 @@ const Login = ({setIsAuthenticated}) => {
       setIsAuthenticated(true);
       navigate('/home');
     } else {
-      console.log(response);
       setMessage(response.detail);
       setShowMessage(true);
       setTimeout(() => {
@@ -62,6 +61,7 @@ const Login = ({setIsAuthenticated}) => {
     <>
       <Navbar/>
       <Container maxWidth="sm">
+        {showMessage && <Alert severity="error">{message}</Alert>}
         <h2>Login</h2>
         <FormGroup row={true} className="form-group">
           <FormControl variant="standard">
