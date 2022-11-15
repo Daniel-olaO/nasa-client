@@ -34,12 +34,13 @@ const Dashboard = ({setIsAuthenticated}) => {
 
   const handleLogOut = async () => {
     const response = await logOut();
-    console.log(response);
-    const cookies = new Cookies();
-    localStorage.removeItem('data');
-    cookies.remove('token');
-    setIsAuthenticated(false);
-    navigate('/');
+    if (response.message) {
+      const cookies = new Cookies();
+      localStorage.removeItem('data');
+      cookies.remove('token');
+      setIsAuthenticated(false);
+      navigate('/');
+    }
   };
   const handleClick = async () => {
     const response = await toggleSubscription();
