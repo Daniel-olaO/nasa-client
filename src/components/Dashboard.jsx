@@ -1,4 +1,6 @@
 import {React, useState, useEffect} from 'react';
+import {useNavigate} from 'react-router-dom';
+import Cookies from 'universal-cookie';
 import {Container, Alert} from '@mui/material';
 import Navbar from './Navbar';
 import '../App.css';
@@ -27,14 +29,18 @@ function toggleSubscription() {
 
 const Dashboard = ({setIsAuthenticated}) => {
   const [isSubscribed, setIsSubscribed] = useState(true);
+  const [userName, setUserName] = useState('');
+  const navigate = useNavigate();
 
-  const logOut = async () => {
+  const handleLogOut = async () => {
     const response = await logOut();
-    console.log(response);
-    const cookies = new Cookies();
-    localStorage.removeItem('data');
-    cookies.remove('token');
-    setIsAuthenticated(false);
+    if (response.message) {
+      const cookies = new Cookies();
+      localStorage.removeItem('data');
+      cookies.remove('token');
+      setIsAuthenticated(false);
+      navigate('/');
+    }
   };
   const handleClick = async () => {
     const response = await toggleSubscription();
@@ -46,16 +52,18 @@ const Dashboard = ({setIsAuthenticated}) => {
     localStorage.removeItem('data');
     localStorage.setItem('data', JSON.stringify(dataSet));
     setIsSubscribed(dataSet.isSubscribed);
+    setUserName(dataSet.name);
   };
 
   useEffect(() => {
     const data = localStorage.getItem('data');
     const parsedData = JSON.parse(data);
     setIsSubscribed(parsedData.isSubscribed);
-  }, [isSubscribed]);
+    setUserName(parsedData.name);
+  }, [isSubscribed, userName]);
   return (
     <>
-      <Navbar />
+      <Navbar userName={userName} logOut={handleLogOut}/>
       <Container maxWidth="sm">
         {isSubscribed ? (
                   <Alert severity="info">
