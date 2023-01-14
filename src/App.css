@@ -65,7 +65,8 @@
 }
 
 .btn-danger,
-.btn-success {
+.btn-success,
+.btn-loading {
   width: 200px;
   height: 200px;
   border-radius: 50%;
@@ -93,7 +94,9 @@
 .btn-success {
   background-color: #5cb85c;
 }
-
+.btn-loading {
+  background-color: #434647;
+}
 .navbar {
   overflow: hidden;
   font-family: Arial;

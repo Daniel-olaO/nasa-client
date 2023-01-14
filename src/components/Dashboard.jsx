@@ -30,6 +30,7 @@ function toggleSubscription() {
 const Dashboard = ({setIsAuthenticated}) => {
   const [isSubscribed, setIsSubscribed] = useState(true);
   const [userName, setUserName] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogOut = async () => {
@@ -43,7 +44,9 @@ const Dashboard = ({setIsAuthenticated}) => {
     }
   };
   const handleClick = async () => {
+    setLoading(true);
     const response = await toggleSubscription();
+    setLoading(false);
     const dataSet = {
       'id': response.id,
       'name': response.name,
@@ -65,17 +68,19 @@ const Dashboard = ({setIsAuthenticated}) => {
     <>
       <Navbar userName={userName} logOut={handleLogOut}/>
       <Container maxWidth="sm">
-        {isSubscribed ? (
-                  <Alert severity="info">
-                    You are subscribed to our Nasa APOD.
-                  </Alert>
-                ) : (
-                  <Alert severity="info">
-                    You are not subscribed to our Nasa APOD.
-                  </Alert>
-                    )
+        {loading ? <Alert severity="info">Loading...</Alert> :
+          isSubscribed ? <Alert severity="info">
+            You are subscribed to nasa APOD
+          </Alert> :
+            <Alert severity="info">
+              You are not subscribed to nasa APOD
+            </Alert>
         }
-        {isSubscribed ?
+        {loading ?
+          <button className="btn-loading" disabled>
+            Loading...
+          </button> :
+        isSubscribed ?
             <button className="btn-danger"
               onClick={()=>{
                 handleClick();

@@ -8,7 +8,7 @@ const Navbar = ({userName, logOut}) => {
       <h1>Nasa APOD Texting Service</h1>
       {userName ? (
             <div className="dropdown">
-              <button className="dropbtn">{userName}
+              <button className="dropbtn">welcome, {userName}
                 <BsFillCaretDownFill/>
               </button>
               <div className="dropdown-content">
