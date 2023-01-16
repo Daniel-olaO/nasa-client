@@ -30,9 +30,12 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [showMessage, setShowMessage] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
+    setLoading(true);
     const response = await signUp({name, email, phone, password});
+    setLoading(false);
     if (response.ok) {
       navigate('/');
     } else {
@@ -51,6 +54,7 @@ const Signup = () => {
     <>
       <Navbar/>
       <Container maxWidth="sm">
+        {loading && <Alert severity="info">Loading...</Alert>}
         {showMessage && <Alert severity="error">{message}</Alert>}
         <h2>Sign Up</h2>
         <FormGroup row={true} className="form-group">

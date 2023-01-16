@@ -30,10 +30,13 @@ const Login = ({setIsAuthenticated}) => {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [showMessage, setShowMessage] = useState(false);
+  const [loading, setLoading] = useState(false);
 
 
   const handleSubmit = async () => {
+    setLoading(true);
     const response = await login({email, password});
+    setLoading(false);
     if (response.jwt) {
       const duration = new Date();
       duration.setTime(duration.getTime() + (1 * 60 * 60 * 1000));
@@ -61,6 +64,7 @@ const Login = ({setIsAuthenticated}) => {
     <>
       <Navbar/>
       <Container maxWidth="sm">
+        {loading && <Alert severity="info">Loading...</Alert>}
         {showMessage && <Alert severity="error">{message}</Alert>}
         <h2>Login</h2>
         <FormGroup row={true} className="form-group">
