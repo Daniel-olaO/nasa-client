@@ -11,7 +11,7 @@ import Navbar from './Navbar';
 
 
 function signUp(user) {
-  const baseUrl = process.env.API_BASE_URL || 'http://localhost:8000';
+  const baseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
   return fetch(`${baseUrl}/api/register`, {
     headers: {
       'Content-Type': 'application/json',
@@ -61,6 +61,7 @@ const Signup = () => {
           <FormControl variant="standard">
             <InputLabel htmlFor="component-simple">Name:</InputLabel>
             <Input id="component-simple"
+              placeholder='John Doe'
               value={name}
               onChange={(e)=>{
                 setName(e.target.value);
@@ -71,6 +72,7 @@ const Signup = () => {
           <FormControl variant="standard">
             <InputLabel htmlFor="component-simple">Email:</InputLabel>
             <Input id="component-simple"
+              placeholder='envkt@example.com'
               value={email}
               onChange={(e)=>{
                 setEmail(e.target.value);
