@@ -28,18 +28,28 @@ const Signup = () => {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rePassword, setRePassword] = useState('');
   const [message, setMessage] = useState('');
   const [showMessage, setShowMessage] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     setLoading(true);
-    const response = await signUp({name, email, phone, password});
-    setLoading(false);
-    if (response.ok) {
-      navigate('/');
+    if (password === rePassword) {
+      const response = await signUp({name, email, phone, password});
+      setLoading(false);
+      if (response.ok) {
+        navigate('/');
+      } else {
+        setMessage(response.detail);
+        setShowMessage(true);
+        setTimeout(() => {
+          setShowMessage(false);
+        }, 2000);
+      }
     } else {
-      setMessage(response.detail);
+      setLoading(false);
+      setMessage('Passwords do not match');
       setShowMessage(true);
       setTimeout(() => {
         setShowMessage(false);
@@ -61,7 +71,7 @@ const Signup = () => {
           <FormControl variant="standard">
             <InputLabel htmlFor="component-simple">Name:</InputLabel>
             <Input id="component-simple"
-              placeholder='John Doe'
+              placeholder='Ryan Doe'
               value={name}
               onChange={(e)=>{
                 setName(e.target.value);
@@ -72,7 +82,7 @@ const Signup = () => {
           <FormControl variant="standard">
             <InputLabel htmlFor="component-simple">Email:</InputLabel>
             <Input id="component-simple"
-              placeholder='envkt@example.com'
+              placeholder='ryan.doe@example.com'
               value={email}
               onChange={(e)=>{
                 setEmail(e.target.value);
@@ -104,6 +114,20 @@ const Signup = () => {
               value={password}
               onChange={(e)=>{
                 setPassword(e.target.value);
+              }}
+              aria-describedby="component-helper-text"
+            />
+          </FormControl>
+        </FormGroup>
+        <FormGroup row={true} className="form-group">
+          <FormControl variant="standard">
+            <InputLabel htmlFor="component-helper">re-Password: </InputLabel>
+            <Input
+              id="component-helper"
+              type="password"
+              value={rePassword}
+              onChange={(e)=>{
+                setRePassword(e.target.value);
               }}
               aria-describedby="component-helper-text"
             />

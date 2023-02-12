@@ -73,7 +73,7 @@ const Login = ({setIsAuthenticated}) => {
             <Input
               id="component-simple"
               value={email}
-              placeholder="Enter your email"
+              placeholder="ryan.doe@example.com"
               onChange={(e)=>{
                 setEmail(e.target.value);
               }} />
