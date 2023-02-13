@@ -12,7 +12,7 @@ import '../App.css';
 
 
 function login(user) {
-  const baseUrl = process.env.API_BASE_URL || 'http://localhost:8000';
+  const baseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
   return fetch(`${baseUrl}/api/login`, {
     headers: {
       'Content-Type': 'application/json',
@@ -70,9 +70,13 @@ const Login = ({setIsAuthenticated}) => {
         <FormGroup row={true} className="form-group">
           <FormControl variant="standard">
             <InputLabel htmlFor="component-simple">Email:</InputLabel>
-            <Input id="component-simple" value={email} onChange={(e)=>{
-              setEmail(e.target.value);
-            }} />
+            <Input
+              id="component-simple"
+              value={email}
+              placeholder="ryan.doe@example.com"
+              onChange={(e)=>{
+                setEmail(e.target.value);
+              }} />
           </FormControl>
         </FormGroup>
         <FormGroup row={true} className="form-group">

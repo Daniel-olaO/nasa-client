@@ -6,7 +6,7 @@ import Navbar from './Navbar';
 import '../App.css';
 
 function logOut() {
-  const baseUrl = process.env.API_BASE_URL ||'http://localhost:8000';
+  const baseUrl = process.env.REACT_APP_API_BASE_URL ||'http://localhost:8000';
   return fetch(baseUrl + '/api/logout', {
     method: 'POST',
   })
@@ -18,7 +18,7 @@ function toggleSubscription() {
   const data = localStorage.getItem('data');
   const parsedData = JSON.parse(data);
   const id = parsedData.id;
-  const baseUrl = process.env.API_BASE_URL ||'http://localhost:8000';
+  const baseUrl = process.env.REACT_APP_API_BASE_URL ||'http://localhost:8000';
   return fetch(`${baseUrl}/api/toggle-subscription/${id}/`, {
     method: 'POST',
   })
