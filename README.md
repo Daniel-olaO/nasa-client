@@ -7,6 +7,7 @@ This a react app that allows users to sign up for a daily text message of the NA
 - [Motivation](#motivation)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Demo](#demo
 - [API](#api)
 - [Tools](#tools)
 - [Author](#author)
@@ -33,6 +34,10 @@ npm start
 ```
 
 users must sign up with a name, a phone number, a email address and a password. The phone number must have the country-code of the country in which the phone number orginated from: Canada -> +16574832074. The email address must be a valid email address. The user will receive a welcome text message. The user will also receive a text message every day with the NASA Astronomy Picture of the Day.
+
+# Demo
+
+link: https://nasa-client.vercel.app/
 
 # API
 
