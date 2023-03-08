@@ -7,7 +7,7 @@ This a react app that allows users to sign up for a daily text message of the NA
 - [Motivation](#motivation)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Demo](#demo
+- [Demo](#demo)
 - [API](#api)
 - [Tools](#tools)
 - [Author](#author)
