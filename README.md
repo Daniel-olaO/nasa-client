@@ -37,7 +37,7 @@ users must sign up with a name, a phone number, a email address and a password. 
 
 # Demo
 
-link: https://nasa-client.vercel.app/
+link: https://nasa-client-production.up.railway.app/
 
 # API
 
