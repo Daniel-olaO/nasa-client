@@ -15,7 +15,6 @@ function logOut() {
       });
 }
 function toggleSubscription(id) {
-  console.log(id);
   const baseUrl = process.env.REACT_APP_API_BASE_URL ||'http://localhost:8000';
   return fetch(`${baseUrl}/api/toggle-subscription/${id}/`, {
     method: 'PUT',

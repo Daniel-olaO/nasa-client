@@ -6,6 +6,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import {FormGroup, Alert} from '@mui/material';
+import Cookies from 'universal-cookie';
 import '../App.css';
 import Navbar from './Navbar';
 
@@ -21,9 +22,22 @@ function signUp(user) {
   })
       .then((data) => data.json());
 }
+function login(user) {
+  const baseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+  return fetch(`${baseUrl}/api/login`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+    body: JSON.stringify(user),
+  })
+      .then((data) => data.json());
+}
 
-const Signup = () => {
+
+const Signup = ({setIsAuthenticated}) => {
   const navigate = useNavigate();
+  const cookies = new Cookies();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -38,8 +52,24 @@ const Signup = () => {
     if (password === rePassword) {
       const response = await signUp({name, email, phone, password});
       setLoading(false);
-      if (response.ok) {
-        navigate('/');
+      if (response.email) {
+        const loginResponse = await login({email, password});
+        if (loginResponse.jwt) {
+          const duration = new Date();
+          duration.setTime(duration.getTime() + (1 * 60 * 60 * 1000));
+          cookies.set('token',
+              loginResponse.jwt,
+              {path: '/', expires: duration},
+          );
+          const dataSet = {
+            'id': loginResponse.user.id,
+            'name': loginResponse.user.name,
+            'isSubscribed': loginResponse.user.isSubscribed,
+          };
+          localStorage.setItem('data', JSON.stringify(dataSet));
+          setIsAuthenticated(true);
+          navigate('/home');
+        }
       } else {
         setMessage(response.detail);
         setShowMessage(true);
