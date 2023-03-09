@@ -70,10 +70,15 @@ const Dashboard = ({setIsAuthenticated}) => {
       <Container maxWidth="sm">
         {loading ? <Alert severity="info">Loading...</Alert> :
           isSubscribed ? <Alert severity="info">
-            You are subscribed to nasa APOD
+            You are currently subscribed.
+            You will get a text with Nasa's Astronomy
+            Picture of the Day every day at 12:00 PM.
+
           </Alert> :
             <Alert severity="info">
-              You are not subscribed to nasa APOD
+              You are currently unsubscribed.
+              Subscribe below to get a text with
+              Nasa's Astronomy Picture of the Day every day at 12:00 PM.
             </Alert>
         }
         {loading ?
