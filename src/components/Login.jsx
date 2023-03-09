@@ -12,15 +12,17 @@ import '../App.css';
 
 
 function login(user) {
-  const baseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
-  return fetch(`${baseUrl}/api/login`, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    body: JSON.stringify(user),
-  })
-      .then((data) => data.json());
+  if (user.email && user.password) {
+    const baseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+    return fetch(`${baseUrl}/api/login`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify(user),
+    })
+        .then((data) => data.json());
+  }
 }
 
 const Login = ({setIsAuthenticated}) => {
@@ -37,27 +39,34 @@ const Login = ({setIsAuthenticated}) => {
     setLoading(true);
     const response = await login({email, password});
     setLoading(false);
-    if (response.jwt) {
-      const duration = new Date();
-      duration.setTime(duration.getTime() + (1 * 60 * 60 * 1000));
-      cookies.set('token', response.jwt, {path: '/', expires: duration});
-      const dataSet = {
-        'id': response.user.id,
-        'name': response.user.name,
-        'isSubscribed': response.user.isSubscribed,
-      };
-      localStorage.setItem('data', JSON.stringify(dataSet));
-      setIsAuthenticated(true);
-      navigate('/home');
+    console.log(response);
+    if (response) {
+      if (response.jwt) {
+        const duration = new Date();
+        duration.setTime(duration.getTime() + (1 * 60 * 60 * 1000));
+        cookies.set('token', response.jwt, {path: '/', expires: duration});
+        const dataSet = {
+          'id': response.user.id,
+          'name': response.user.name,
+          'isSubscribed': response.user.isSubscribed,
+        };
+        localStorage.setItem('data', JSON.stringify(dataSet));
+        setIsAuthenticated(true);
+        navigate('/home');
+      } else if (response.detail) {
+        setMessage(response.detail);
+        setShowMessage(true);
+        setTimeout(() => {
+          setShowMessage(false);
+        }, 2000);
+      }
     } else {
-      setMessage(response.detail);
+      setMessage('Please fill out all fields');
       setShowMessage(true);
       setTimeout(() => {
         setShowMessage(false);
       }, 2000);
     }
-    setEmail('');
-    setPassword('');
   };
 
   return (
@@ -76,7 +85,8 @@ const Login = ({setIsAuthenticated}) => {
               placeholder="ryan.doe@example.com"
               onChange={(e)=>{
                 setEmail(e.target.value);
-              }} />
+              }}
+              required/>
           </FormControl>
         </FormGroup>
         <FormGroup row={true} className="form-group">
@@ -90,6 +100,7 @@ const Login = ({setIsAuthenticated}) => {
                 setPassword(e.target.value);
               }}
               aria-describedby="component-helper-text"
+              required
             />
           </FormControl>
         </FormGroup>
