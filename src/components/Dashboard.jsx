@@ -72,13 +72,13 @@ const Dashboard = ({setIsAuthenticated}) => {
           isSubscribed ? <Alert severity="info">
             You are currently subscribed.
             You will get a text with Nasa's Astronomy
-            Picture of the Day every day at 12:00 PM.
+            Picture of the Day every day at 12:00 PM UTC.
 
           </Alert> :
             <Alert severity="info">
               You are currently unsubscribed.
               Subscribe below to get a text with
-              Nasa's Astronomy Picture of the Day every day at 12:00 PM.
+              Nasa's Astronomy Picture of the Day every day at 12:00 PM UTC.
             </Alert>
         }
         {loading ?
