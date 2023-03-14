@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import {FormGroup, Alert} from '@mui/material';
 import '../App.css';
 import Navbar from './Navbar';
+import Description from './Description';
 
 
 function signUp(user) {
@@ -64,6 +65,7 @@ const Signup = () => {
     <>
       <Navbar/>
       <Container maxWidth="sm">
+        <Description/>
         {loading && <Alert severity="info">Loading...</Alert>}
         {showMessage && <Alert severity="error">{message}</Alert>}
         <h2>Sign Up</h2>
