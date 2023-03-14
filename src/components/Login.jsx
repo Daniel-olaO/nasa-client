@@ -1,16 +1,11 @@
 import {React, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
-import Container from '@mui/material/Container';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import {FormGroup, Alert} from '@mui/material';
-import {useFormik, Formik, Form, Field, ErrorMessage} from 'formik';
+import {Container, Button, Alert} from '@mui/material';
+import {Formik, Form, Field, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
 import Cookies from 'universal-cookie';
 import Navbar from './Navbar';
 import '../App.css';
-import {async} from 'q';
-
 
 function login(user) {
   if (user.email && user.password) {
