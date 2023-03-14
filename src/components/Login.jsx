@@ -1,11 +1,11 @@
 import {React, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import Container from '@mui/material/Container';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Input from '@mui/material/Input';
+import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {FormGroup, Alert} from '@mui/material';
+import {useFormik} from 'formik';
+import * as Yup from 'yup';
 import Cookies from 'universal-cookie';
 import Navbar from './Navbar';
 import '../App.css';
@@ -24,23 +24,34 @@ function login(user) {
         .then((data) => data.json());
   }
 }
+const validationSchema = Yup.object({
+  email: Yup
+      .string()
+      .email('Invalid email format')
+      .required('Email is required'),
+  password: Yup
+      .string()
+      .required('Password is required'),
+});
 
 const Login = ({setIsAuthenticated}) => {
   const navigate = useNavigate();
   const cookies = new Cookies();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [showMessage, setShowMessage] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+  const [message, setMessage] = useState('');
 
-
-  const handleSubmit = async () => {
-    setLoading(true);
-    const response = await login({email, password});
-    setLoading(false);
-    console.log(response);
-    if (response) {
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values) => {
+      setLoading(true);
+      const response = await login(values);
+      setLoading(false);
+      console.log(response);
       if (response.jwt) {
         const duration = new Date();
         duration.setTime(duration.getTime() + (1 * 60 * 60 * 1000));
@@ -60,14 +71,8 @@ const Login = ({setIsAuthenticated}) => {
           setShowMessage(false);
         }, 2000);
       }
-    } else {
-      setMessage('Please fill out all fields');
-      setShowMessage(true);
-      setTimeout(() => {
-        setShowMessage(false);
-      }, 2000);
-    }
-  };
+    },
+  });
 
   return (
     <>
@@ -76,38 +81,38 @@ const Login = ({setIsAuthenticated}) => {
         {loading && <Alert severity="info">Loading...</Alert>}
         {showMessage && <Alert severity="error">{message}</Alert>}
         <h2>Login</h2>
-        <FormGroup row={true} className="form-group">
-          <FormControl variant="standard">
-            <InputLabel htmlFor="component-simple">Email:</InputLabel>
-            <Input
-              id="component-simple"
-              value={email}
+        <form onSubmit={formik.handleSubmit}>
+          <div className='form-group'>
+            <TextField id='filled-basic email'
+              variant='filled'
+              label='Email'
+              name='email'
+              value={formik.values.email}
               placeholder="ryan.doe@example.com"
-              onChange={(e)=>{
-                setEmail(e.target.value);
-              }}
-              required/>
-          </FormControl>
-        </FormGroup>
-        <FormGroup row={true} className="form-group">
-          <FormControl variant="standard">
-            <InputLabel htmlFor="component-helper">Password: </InputLabel>
-            <Input
-              id="component-helper"
-              type="password"
-              value={password}
-              onChange={(e)=>{
-                setPassword(e.target.value);
-              }}
-              aria-describedby="component-helper-text"
-              required
+              onChange={formik.handleChange}
+              error={formik.touched.email && Boolean(formik.errors.email)}
+              helperText={formik.touched.email && formik.errors.email}
             />
-          </FormControl>
-        </FormGroup>
-        <Button variant="contained"
-          onClick={()=>{
-            handleSubmit(email, password);
-          }}>Login</Button>
+          </div>
+          <div className='form-group'>
+            <TextField id='filled-basic password'
+              variant='filled'
+              label='Password'
+              name='password'
+              type="password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              error={formik.touched.password && Boolean(formik.errors.password)}
+              helperText={formik.touched.password && formik.errors.password}
+            />
+          </div>
+          <div className="form-group">
+            <Button variant="contained"
+              type='submit'
+            >Login</Button>
+          </div>
+        </form>
+
         <h5>Don't have an account? <Link to='/signup'>Sign up</Link></h5>
       </Container>
     </>
