@@ -14,13 +14,10 @@ function logOut() {
         return response.json();
       });
 }
-function toggleSubscription() {
-  const data = localStorage.getItem('data');
-  const parsedData = JSON.parse(data);
-  const id = parsedData.id;
+function toggleSubscription(id) {
   const baseUrl = process.env.REACT_APP_API_BASE_URL ||'http://localhost:8000';
   return fetch(`${baseUrl}/api/toggle-subscription/${id}/`, {
-    method: 'POST',
+    method: 'PUT',
   })
       .then((response) => {
         return response.json();
@@ -31,6 +28,7 @@ const Dashboard = ({setIsAuthenticated}) => {
   const [isSubscribed, setIsSubscribed] = useState(true);
   const [userName, setUserName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [id, setId] = useState(0);
   const navigate = useNavigate();
 
   const handleLogOut = async () => {
@@ -45,17 +43,11 @@ const Dashboard = ({setIsAuthenticated}) => {
   };
   const handleClick = async () => {
     setLoading(true);
-    const response = await toggleSubscription();
+    const response = await toggleSubscription(id);
     setLoading(false);
-    const dataSet = {
-      'id': response.id,
-      'name': response.name,
-      'isSubscribed': response.isSubscribed,
-    };
-    localStorage.removeItem('data');
-    localStorage.setItem('data', JSON.stringify(dataSet));
-    setIsSubscribed(dataSet.isSubscribed);
-    setUserName(dataSet.name);
+    setIsSubscribed(response.isSubscribed);
+    setUserName(response.name);
+    setId(response.id);
   };
 
   useEffect(() => {
@@ -63,7 +55,8 @@ const Dashboard = ({setIsAuthenticated}) => {
     const parsedData = JSON.parse(data);
     setIsSubscribed(parsedData.isSubscribed);
     setUserName(parsedData.name);
-  }, [isSubscribed, userName]);
+    setId(parsedData.id);
+  }, []);
   return (
     <>
       <Navbar userName={userName} logOut={handleLogOut}/>

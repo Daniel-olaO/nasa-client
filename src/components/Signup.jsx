@@ -1,11 +1,9 @@
 import {React, useState} from 'react';
 import {useNavigate, Link} from 'react-router-dom';
-import Container from '@mui/material/Container';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Input from '@mui/material/Input';
-import Button from '@mui/material/Button';
-import {FormGroup, Alert} from '@mui/material';
+import {Container, Button, Alert, TextField} from '@mui/material';
+import {Formik, Form, Field, ErrorMessage} from 'formik';
+import * as Yup from 'yup';
+import Cookies from 'universal-cookie';
 import '../App.css';
 import Navbar from './Navbar';
 import Description from './Description';
@@ -22,45 +20,73 @@ function signUp(user) {
   })
       .then((data) => data.json());
 }
+function login(user) {
+  const baseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+  return fetch(`${baseUrl}/api/login`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+    body: JSON.stringify(user),
+  })
+      .then((data) => data.json());
+}
+const validationSchema = Yup.object({
+  name: Yup
+      .string()
+      .default('')
+      .required('Name is required'),
+  phone: Yup
+      .string()
+      .default('')
+      .required('Phone is required')
+      .matches(/^\+[0-9]{9,15}$/, 'Invalid phone number: +123456789'),
+  email: Yup
+      .string()
+      .default('')
+      .email('Invalid email format')
+      .required('Email is required'),
+  password: Yup
+      .string()
+      .default('')
+      .required('Password is required'),
+});
 
-const Signup = () => {
+
+const Signup = ({setIsAuthenticated}) => {
   const navigate = useNavigate();
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [rePassword, setRePassword] = useState('');
+  const cookies = new Cookies();
   const [message, setMessage] = useState('');
   const [showMessage, setShowMessage] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async () => {
+  const handleSignUp = async (values) => {
     setLoading(true);
-    if (password === rePassword) {
-      const response = await signUp({name, email, phone, password});
-      setLoading(false);
-      if (response.ok) {
-        navigate('/');
-      } else {
-        setMessage(response.detail);
-        setShowMessage(true);
-        setTimeout(() => {
-          setShowMessage(false);
-        }, 2000);
+    const response = await signUp(values);
+    setLoading(false);
+    if (response.id) {
+      const loginResponse = await login({
+        email: values.email,
+        password: values.password,
+      });
+      if (loginResponse.jwt) {
+        const duration = new Date();
+        duration.setTime(duration.getTime() + (1 * 60 * 60 * 1000));
+        cookies.set('token',
+            loginResponse.jwt, {path: '/', expires: duration});
+        setIsAuthenticated(true);
+        navigate('/home');
       }
     } else {
-      setLoading(false);
-      setMessage('Passwords do not match');
+      setMessage(response.phone[0] || response.email[0] ||
+          'error: please try again');
       setShowMessage(true);
       setTimeout(() => {
         setShowMessage(false);
       }, 2000);
     }
-    setName('');
-    setEmail('');
-    setPassword('');
-    setPhone('');
   };
+
   return (
     <>
       <Navbar/>
@@ -69,76 +95,42 @@ const Signup = () => {
         {loading && <Alert severity="info">Loading...</Alert>}
         {showMessage && <Alert severity="error">{message}</Alert>}
         <h2>Sign Up</h2>
-        <FormGroup row={true} className="form-group">
-          <FormControl variant="standard">
-            <InputLabel htmlFor="component-simple">Name:</InputLabel>
-            <Input id="component-simple"
-              placeholder='Ryan Doe'
-              value={name}
-              onChange={(e)=>{
-                setName(e.target.value);
-              }} />
-          </FormControl>
-        </FormGroup>
-        <FormGroup row={true} className="form-group">
-          <FormControl variant="standard">
-            <InputLabel htmlFor="component-simple">Email:</InputLabel>
-            <Input id="component-simple"
-              placeholder='ryan.doe@example.com'
-              value={email}
-              onChange={(e)=>{
-                setEmail(e.target.value);
-              }} />
-          </FormControl>
-        </FormGroup>
-        <FormGroup row={true} className="form-group">
-          <FormControl variant="standard">
-            <InputLabel htmlFor="component-helper">Phone: </InputLabel>
-            <Input
-              id="component-helper"
-              type="text"
-              placeholder="+123456789"
-              pattern="^\+[0-9]{9,15}$"
-              value={phone}
-              onChange={(e)=>{
-                setPhone(e.target.value);
-              }}
-              aria-describedby="component-helper-text"
-            />
-          </FormControl>
-        </FormGroup>
-        <FormGroup row={true} className="form-group">
-          <FormControl variant="standard">
-            <InputLabel htmlFor="component-helper">Password: </InputLabel>
-            <Input
-              id="component-helper"
-              type="password"
-              value={password}
-              onChange={(e)=>{
-                setPassword(e.target.value);
-              }}
-              aria-describedby="component-helper-text"
-            />
-          </FormControl>
-        </FormGroup>
-        <FormGroup row={true} className="form-group">
-          <FormControl variant="standard">
-            <InputLabel htmlFor="component-helper">re-Password: </InputLabel>
-            <Input
-              id="component-helper"
-              type="password"
-              value={rePassword}
-              onChange={(e)=>{
-                setRePassword(e.target.value);
-              }}
-              aria-describedby="component-helper-text"
-            />
-          </FormControl>
-        </FormGroup>
-        <Button variant="contained"
-          onClick={()=>{
-            handleSubmit(email, password);
-          }}>Sign Up</Button>
+        <Formik
+          initialValues={validationSchema.default()}
+          validationSchema={validationSchema}
+          onSubmit={async (values) => {
+            await handleSignUp(values);
+          }}
+        >
+          {(props)=>(
+            <Form>
+              <div className="form-group">
+                <Field type="text" name="name" placeholder="Ryan Doe"
+                  as={TextField} label="Full Name" variant="filled"/>
+                <ErrorMessage name="name" component="div" className="error"/>
+              </div>
+              <div className="form-group">
+                <Field type="text" name="email" placeholder="ryan.doe@abc.com"
+                  as={TextField} label="Email" variant="filled"/>
+                <ErrorMessage name="email" component="div" className="error"/>
+              </div>
+              <div className="form-group">
+                <Field type="tel" name="phone" placeholder="+123456789"
+                  as={TextField} label="Phone" variant="filled"/>
+                <ErrorMessage name="phone" component="div" className="error"/>
+              </div>
+              <div className="form-group">
+                <Field type="password" name="password" placeholder="********"
+                  as={TextField} label="Password" variant="filled"/>
+                <ErrorMessage
+                  name="password" component="div" className="error"/>
+              </div>
+              <Button type="submit" variant="contained" color="primary">
+                Sign Up
+              </Button>
+            </Form>
+          )}
+        </Formik>
       </Container>
       <h5>Already have an account? <Link to="/">Login</Link></h5>
     </>

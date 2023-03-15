@@ -1,42 +1,48 @@
 import {React, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
-import Container from '@mui/material/Container';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Input from '@mui/material/Input';
-import Button from '@mui/material/Button';
-import {FormGroup, Alert} from '@mui/material';
+import {Container, Button, Alert, TextField} from '@mui/material';
+import {Formik, Form, Field, ErrorMessage} from 'formik';
+import * as Yup from 'yup';
 import Cookies from 'universal-cookie';
 import Navbar from './Navbar';
 import Description from './Description';
 import '../App.css';
 
-
 function login(user) {
-  const baseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
-  return fetch(`${baseUrl}/api/login`, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    body: JSON.stringify(user),
-  })
-      .then((data) => data.json());
+  if (user.email && user.password) {
+    const baseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+    return fetch(`${baseUrl}/api/login`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify(user),
+    })
+        .then((data) => data.json());
+  }
 }
+const validationSchema = Yup.object({
+  email: Yup
+      .string()
+      .default('')
+      .email('Invalid email format')
+      .required('Email is required'),
+  password: Yup
+      .string()
+      .default('')
+      .required('Password is required'),
+});
 
 const Login = ({setIsAuthenticated}) => {
   const navigate = useNavigate();
   const cookies = new Cookies();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [showMessage, setShowMessage] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+  const [message, setMessage] = useState('');
 
-
-  const handleSubmit = async () => {
+  const handleLogin = async (values) => {
     setLoading(true);
-    const response = await login({email, password});
+    const response = await login(values);
     setLoading(false);
     if (response.jwt) {
       const duration = new Date();
@@ -50,15 +56,13 @@ const Login = ({setIsAuthenticated}) => {
       localStorage.setItem('data', JSON.stringify(dataSet));
       setIsAuthenticated(true);
       navigate('/home');
-    } else {
+    } else if (response.detail) {
       setMessage(response.detail);
       setShowMessage(true);
       setTimeout(() => {
         setShowMessage(false);
       }, 2000);
     }
-    setEmail('');
-    setPassword('');
   };
 
   return (
@@ -69,36 +73,36 @@ const Login = ({setIsAuthenticated}) => {
         {loading && <Alert severity="info">Loading...</Alert>}
         {showMessage && <Alert severity="error">{message}</Alert>}
         <h2>Login</h2>
-        <FormGroup row={true} className="form-group">
-          <FormControl variant="standard">
-            <InputLabel htmlFor="component-simple">Email:</InputLabel>
-            <Input
-              id="component-simple"
-              value={email}
-              placeholder="ryan.doe@example.com"
-              onChange={(e)=>{
-                setEmail(e.target.value);
-              }} />
-          </FormControl>
-        </FormGroup>
-        <FormGroup row={true} className="form-group">
-          <FormControl variant="standard">
-            <InputLabel htmlFor="component-helper">Password: </InputLabel>
-            <Input
-              id="component-helper"
-              type="password"
-              value={password}
-              onChange={(e)=>{
-                setPassword(e.target.value);
-              }}
-              aria-describedby="component-helper-text"
-            />
-          </FormControl>
-        </FormGroup>
-        <Button variant="contained"
-          onClick={()=>{
-            handleSubmit(email, password);
-          }}>Login</Button>
+        <Formik
+          initialValues={validationSchema.default()}
+          validationSchema={validationSchema}
+          onSubmit={async (values) => {
+            await handleLogin(values);
+          }}
+        >
+          {(props)=>(
+            <Form>
+              <div className="form-group">
+                <Field name="email" type="email"
+                  as={TextField} label="Email" variant="filled"
+                />
+                <ErrorMessage name="email" component="div" className="error"/>
+              </div>
+              <div className="form-group">
+                <Field name="password" type="password"
+                  as={TextField} label="Password"
+                  variant="filled"/>
+                <ErrorMessage name="password" component="div"className="error"/>
+              </div>
+              <div className="form-group">
+                <Button type="submit" variant="contained" color="primary">
+                Login
+                </Button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+
         <h5>Don't have an account? <Link to='/signup'>Sign up</Link></h5>
       </Container>
     </>

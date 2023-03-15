@@ -25,7 +25,9 @@ function App() {
         <Route path="/" element={
           <Login setIsAuthenticated={setIsAuthenticated}/>
         } />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/signup" element={
+          <Signup setIsAuthenticated={setIsAuthenticated}/>
+        } />
         <Route path="/home" element={
           <ProtectedRoute isAuth={isAuthenticated}>
             <Dashboard setIsAuthenticated={setIsAuthenticated}/>
