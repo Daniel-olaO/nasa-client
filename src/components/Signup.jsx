@@ -97,7 +97,7 @@ const Signup = ({setIsAuthenticated}) => {
           initialValues={validationSchema.default()}
           validationSchema={validationSchema}
           onSubmit={async (values) => {
-            await signUp(values);
+            await handleSignUp(values);
           }}
         >
           {(props)=>(
