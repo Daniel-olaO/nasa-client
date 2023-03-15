@@ -7,7 +7,7 @@ This a react app that allows users to sign up for a daily text message of the NA
 - [Motivation](#motivation)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Demo](#demo
+- [Demo](#demo)
 - [API](#api)
 - [Tools](#tools)
 - [Author](#author)
@@ -37,7 +37,7 @@ users must sign up with a name, a phone number, a email address and a password. 
 
 # Demo
 
-link: https://nasa-client.vercel.app/
+link: https://nasa-client-production.up.railway.app/
 
 # API
 

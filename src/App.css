@@ -87,7 +87,6 @@
   transition: all 0.3s ease;
   margin-top: 3%;
 }
-
 .btn-danger:hover,
 .btn-success:hover {
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.8);
@@ -167,4 +166,12 @@
 
 .dropdown:hover .dropdown-content {
   display: block;
+}
+.app-desc{
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  margin-top: 5%;
+  margin-bottom: 5%;
 }

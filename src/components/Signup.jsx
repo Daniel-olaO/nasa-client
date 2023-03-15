@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import Cookies from 'universal-cookie';
 import '../App.css';
 import Navbar from './Navbar';
+import Description from './Description';
 
 
 function signUp(user) {
@@ -90,6 +91,7 @@ const Signup = ({setIsAuthenticated}) => {
     <>
       <Navbar/>
       <Container maxWidth="sm">
+        <Description/>
         {loading && <Alert severity="info">Loading...</Alert>}
         {showMessage && <Alert severity="error">{message}</Alert>}
         <h2>Sign Up</h2>
