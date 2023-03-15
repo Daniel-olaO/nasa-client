@@ -97,7 +97,7 @@ const Signup = ({setIsAuthenticated}) => {
           initialValues={validationSchema.default()}
           validationSchema={validationSchema}
           onSubmit={async (values) => {
-            alert(JSON.stringify(values, null, 2));
+            await handleSignUp(values);
           }}
         >
           {(props)=>(
@@ -113,7 +113,7 @@ const Signup = ({setIsAuthenticated}) => {
                 <ErrorMessage name="email" component="div" className="error"/>
               </div>
               <div className="form-group">
-                <Field type="text" name="phone" placeholder="+123456789"
+                <Field type="tel" name="phone" placeholder="+123456789"
                   as={TextField} label="Phone" variant="filled"/>
                 <ErrorMessage name="phone" component="div" className="error"/>
               </div>
