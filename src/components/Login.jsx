@@ -103,7 +103,9 @@ const Login = ({setIsAuthenticated}) => {
           )}
         </Formik>
 
-        <h5>Don't have an account? <Link to='/signup'>Sign up</Link></h5>
+        <h5>Don't have an account? <Link to='/signup'>
+            Create Account
+        </Link></h5>
       </Container>
     </>
   );
