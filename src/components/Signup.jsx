@@ -70,10 +70,17 @@ const Signup = ({setIsAuthenticated}) => {
         password: values.password,
       });
       if (loginResponse.jwt) {
+        console.log(loginResponse);
         const duration = new Date();
         duration.setTime(duration.getTime() + (1 * 60 * 60 * 1000));
         cookies.set('token',
             loginResponse.jwt, {path: '/', expires: duration});
+        const dataSet = {
+          'id': loginResponse.user.id,
+          'name': loginResponse.user.name,
+          'isSubscribed': loginResponse.user.isSubscribed,
+        };
+        localStorage.setItem('data', JSON.stringify(dataSet));
         setIsAuthenticated(true);
         navigate('/home');
       }
