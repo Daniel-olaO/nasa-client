@@ -70,7 +70,6 @@ const Signup = ({setIsAuthenticated}) => {
         password: values.password,
       });
       if (loginResponse.jwt) {
-        console.log(loginResponse);
         const duration = new Date();
         duration.setTime(duration.getTime() + (1 * 60 * 60 * 1000));
         cookies.set('token',
