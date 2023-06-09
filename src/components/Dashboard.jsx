@@ -2,25 +2,25 @@ import {React, useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import {Container, Alert} from '@mui/material';
+import axios from 'axios';
 import Navbar from './Navbar';
 import '../App.css';
 
 function logOut() {
   const baseUrl = process.env.REACT_APP_API_BASE_URL ||'http://localhost:8000';
-  return fetch(baseUrl + '/api/logout', {
-    method: 'POST',
-  })
-      .then((response) => {
-        return response.json();
+  return axios.post(`${baseUrl}/api/logout`)
+      .then(function(response) {
+        return response.data;
       });
 }
 function toggleSubscription(id) {
   const baseUrl = process.env.REACT_APP_API_BASE_URL ||'http://localhost:8000';
-  return fetch(`${baseUrl}/api/toggle-subscription/${id}/`, {
-    method: 'PUT',
-  })
-      .then((response) => {
-        return response.json();
+  return axios.put(`${baseUrl}/api/toggle-subscription/${id}/`)
+      .then(function(response) {
+        return response.data;
+      })
+      .catch(function(error) {
+        return error.response.data;
       });
 }
 

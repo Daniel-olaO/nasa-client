@@ -4,6 +4,7 @@ import {Container, Button, Alert, TextField} from '@mui/material';
 import {Formik, Form, Field, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
 import Cookies from 'universal-cookie';
+import axios from 'axios';
 import '../App.css';
 import Navbar from './Navbar';
 import Description from './Description';
@@ -11,25 +12,23 @@ import Description from './Description';
 
 function signUp(user) {
   const baseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
-  return fetch(`${baseUrl}/api/register`, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    body: JSON.stringify(user),
-  })
-      .then((data) => data.json());
+  return axios.post(`${baseUrl}/api/register`, user)
+      .then(function(response) {
+        return response.data;
+      })
+      .catch(function(error) {
+        return error.response.data;
+      });
 }
 function login(user) {
   const baseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
-  return fetch(`${baseUrl}/api/login`, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    body: JSON.stringify(user),
-  })
-      .then((data) => data.json());
+  return axios.post(`${baseUrl}/api/login`, user)
+      .then(function(response) {
+        return response.data;
+      })
+      .catch(function(error) {
+        return error.response.data;
+      });
 }
 const validationSchema = Yup.object({
   name: Yup
