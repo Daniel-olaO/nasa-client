@@ -71,7 +71,7 @@ const Dashboard = ({setIsAuthenticated}) => {
             <Alert severity="info">
               You are currently unsubscribed.
               Subscribe below to get a text with
-              Nasa's Astronomy Picture of the Day every day at 12:00 PM UTC.
+              Nasa's Astronomy Picture of the Day every day at 12:05 PM UTC.
             </Alert>
         }
         {loading ?
